@@ -1,7 +1,12 @@
 License for Code
 ----------------
 
-All code written by RisingLeaf (CC BY-SA 4.0)
+If not stated otherwise, written by RisingLeaf (CC BY-SA 4.0)
+
+File:
+ chatcmdbuilder.lua
+Author: rubenwardy
+License: MIT
 
 License for Media
 -----------------
