@@ -1,5 +1,5 @@
 function set_player_attrib(player_name, attrib, value)
-    player_array = minetest.deserialize(storage:get_string(player_name))
+    local player_array = minetest.deserialize(storage:get_string(player_name))
     if player_array == nil then
         player_array = {}
     end
@@ -8,7 +8,7 @@ function set_player_attrib(player_name, attrib, value)
 end
 
 function get_player_attribute(player_name, attrib)
-    player_array = minetest.deserialize(storage:get_string(player_name))
+    local player_array = minetest.deserialize(storage:get_string(player_name))
     if player_array == nil then
         return nil
     end

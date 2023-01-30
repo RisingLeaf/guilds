@@ -24,9 +24,9 @@ minetest.register_chatcommand("create_guild", {
         guild_priv = true,
     },
     func = function(name, param)
-        guilds = minetest.deserialize(storage:get_string("guilds"))
-        player = minetest.get_player_by_name(name)
-        guild_name = get_player_attribute(name, "guild")
+        local guilds = minetest.deserialize(storage:get_string("guilds"))
+        local player = minetest.get_player_by_name(name)
+        local guild_name = get_player_attribute(name, "guild")
         if guild_name ~= nil then
             minetest.chat_send_player(name, "You are already in the guild " .. guild_name .. ". For more information type '/my_guild'.")
             return false
@@ -34,10 +34,9 @@ minetest.register_chatcommand("create_guild", {
             minetest.chat_send_player(name, "This Guild does already exist. The leader is: " .. guilds[param])
             return false
         else
-            player = minetest.get_player_by_name(name)
             set_player_attrib(name, "guild", param)
             guilds[param] = name
-            guild = {}
+            local guild = {}
             guild[name] = 10
             storage:set_string("guilds", minetest.serialize(guilds))
             storage:set_string(param, minetest.serialize(guild))
@@ -50,13 +49,13 @@ minetest.register_chatcommand("create_guild", {
 minetest.register_chatcommand("my_guild", {
     privs = {},
     func = function(name, param)
-        player     = minetest.get_player_by_name(name)
-        guild_name = get_player_attribute(name, "guild")
+        local player     = minetest.get_player_by_name(name)
+        local guild_name = get_player_attribute(name, "guild")
         if guild_name ~= nil then
-            guilds     = minetest.deserialize(storage:get_string("guilds"))
-            guild      = minetest.deserialize(storage:get_string(guild_name))
-            leader     = guilds[guild_name]
-            rank       = guild[name]
+            local guilds     = minetest.deserialize(storage:get_string("guilds"))
+            local guild      = minetest.deserialize(storage:get_string(guild_name))
+            local leader     = guilds[guild_name]
+            local rank       = guild[name]
             minetest.chat_send_player(name, "You are rank " .. rank .. " in the guild " .. guild_name .. ". Your leader is " .. leader .. ".")
         else
             minetest.chat_send_player(name, "You are not in a guild.")
@@ -68,9 +67,9 @@ minetest.register_chatcommand("my_guild", {
 minetest.register_chatcommand("join_guild", {
     privs = {},
     func = function(name, param)
-        player = minetest.get_player_by_name(name)
-        guild_name = get_player_attribute(name, "guild")
-        guilds = minetest.deserialize(storage:get_string("guilds"))
+        local player = minetest.get_player_by_name(name)
+        local guild_name = get_player_attribute(name, "guild")
+        local guilds = minetest.deserialize(storage:get_string("guilds"))
         if guilds[param] == nil then
             minetest.chat_send_player(name, "This Guild does not exist.")
             return false
@@ -88,13 +87,13 @@ minetest.register_chatcommand("join_guild", {
 minetest.register_chatcommand("accept", {
     privs = {},
     func = function(name, param)
-        player_applying = minetest.get_player_by_name(param)
+        local player_applying = minetest.get_player_by_name(param)
         if player_applying ~= nil then
-            player          = minetest.get_player_by_name(name)
-            guild_name      = get_player_attribute(name, "guild")
+            local player          = minetest.get_player_by_name(name)
+            local guild_name      = get_player_attribute(name, "guild")
             if guild_name ~= nil then
-                guild           = minetest.deserialize(storage:get_string(guild_name))
-                applied_guild   = get_player_attribute(param, "applying")
+                local guild           = minetest.deserialize(storage:get_string(guild_name))
+                local applied_guild   = get_player_attribute(param, "applying")
                 if applied_guild == guild_name then
                     if guild[name] >= 5 then
                         set_player_attrib(param, "guild", guild_name)
@@ -120,10 +119,10 @@ minetest.register_chatcommand("accept", {
 minetest.register_chatcommand("leave_guild", {
     privs = {},
     func = function(name, param)
-        player = minetest.get_player_by_name(name)
-        guild_name = get_player_attribute(name "guild")
+        local player = minetest.get_player_by_name(name)
+        local guild_name = get_player_attribute(name "guild")
         if guild_name ~= nil then
-            guild = storage:get_string(guild_name)
+            local guild = storage:get_string(guild_name)
             if guild[name] ~= 10 then
                 guild_message(guild, name, name .. "leaved the guild!", "#f33df0")
                 guild[name] = nil
@@ -141,10 +140,10 @@ minetest.register_chatcommand("leave_guild", {
 minetest.register_chatcommand("gm", {
     privs = {shout = true},
     func = function(name, param)
-        player = minetest.get_player_by_name(name)
-        guild_name = get_player_attribute(name, "guild")
+        local player = minetest.get_player_by_name(name)
+        local guild_name = get_player_attribute(name, "guild")
         if guild_name ~= nil then
-            guild = minetest.deserialize(storage:get_string(guild_name))
+            local guild = minetest.deserialize(storage:get_string(guild_name))
             guild_message(guild, name, param, "#15f312")
         else
             minetest.chat_send_player(name, "You are not in a guild!")
@@ -155,15 +154,15 @@ minetest.register_chatcommand("gm", {
 minetest.register_chatcommand("declare_war", {
     privs = {shout = true},
     func = function(name, param)
-        player = minetest.get_player_by_name(name)
-        guild_name = get_player_attribute(name, "guild")
+        local player = minetest.get_player_by_name(name)
+        local guild_name = get_player_attribute(name, "guild")
         if guild_name ~= nil then
-            player_guild = minetest.deserialize(storage:get_string(guild_name))
-            guilds = minetest.deserialize(storage:get_string("guilds"))
+            local player_guild = minetest.deserialize(storage:get_string(guild_name))
+            local guilds = minetest.deserialize(storage:get_string("guilds"))
             if guilds[param] ~= nil then
-                rank = player_guild[name]
+                local rank = player_guild[name]
                 if rank >= 8 then
-                    war_guild = minetest.deserialize(storage:get_string(param))
+                    local war_guild = minetest.deserialize(storage:get_string(param))
                     guild_message(war_guild, name, "The Guild " .. guild_name .. " declared war to you. Come to the PvP Arena!", "#f30004")
                     guild_message(player_guild, name, "We declared war to " .. param .. ". Come to the PvP Arena.", "#f30004")
                 else
@@ -181,13 +180,13 @@ minetest.register_chatcommand("declare_war", {
 ChatCmdBuilder.new("promote", function(cmd)
     cmd:sub(":target :to_rank:int", 
     function(name, target, to_rank)
-        player = minetest.get_player_by_name(name)
-        guild_name = get_player_attribute(name, "guild")
+        local player = minetest.get_player_by_name(name)
+        local guild_name = get_player_attribute(name, "guild")
         if guild_name ~= nil then
-            guild = minetest.deserialize(storage:get_string(guild_name))
+            local guild = minetest.deserialize(storage:get_string(guild_name))
             if guild[target] ~= nil then
-                player_rank = guild[name]
-                promote_rank = guild[target]
+                local player_rank = guild[name]
+                local promote_rank = guild[target]
                 if promote_rank < player_rank and player_rank > to_rank then
                     guild[target] = to_rank
                     storage:set_string(guild_name, minetest.serialize(guild))
@@ -213,7 +212,7 @@ end, {
 minetest.register_chatcommand("list_guilds", {
     privs = {},
     func = function(name, param)
-        guilds = minetest.deserialize(storage:get_string("guilds"))
+        local guilds = minetest.deserialize(storage:get_string("guilds"))
         minetest.chat_send_player(name, minetest.serialize(guilds))
     end,
 })
@@ -223,13 +222,13 @@ minetest.register_chatcommand("list_guilds", {
 function get_formspec(name)
     local formspec = {}
 
-    player = minetest.get_player_by_name(name)
-    guild_name = get_player_attribute(name, "guild")
+    local player = minetest.get_player_by_name(name)
+    local guild_name = get_player_attribute(name, "guild")
     if guild_name ~= nil then
-        guild = minetest.deserialize(storage:get_string(guild_name))
-        guilds     = minetest.deserialize(storage:get_string("guilds"))
-        leader     = guilds[guild_name]
-        rank       = guild[name]
+        local guild = minetest.deserialize(storage:get_string(guild_name))
+        local guilds     = minetest.deserialize(storage:get_string("guilds"))
+        local leader     = guilds[guild_name]
+        local rank       = guild[name]
         
         local player_list_string = ""
         for key, value in pairs(guild) do
@@ -278,11 +277,11 @@ minetest.register_chatcommand("guilds_menu", {
 })
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-    name = player:get_player_name()
-    guild_name = get_player_attribute(name, "guild")
+    local name = player:get_player_name()
+    local guild_name = get_player_attribute(name, "guild")
 	if formname == "guilds:menu" then
         if fields["send"] ~= nil then
-            guild = minetest.deserialize(storage:get_string(guild_name))
+            local guild = minetest.deserialize(storage:get_string(guild_name))
             guild_message(guild, name, fields["chat"], "#15f312")
         end
 	end
